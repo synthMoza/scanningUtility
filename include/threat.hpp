@@ -1,10 +1,10 @@
 #pragma once
 
 #include <vector>
-#include <string_view>
+#include <string>
 
 namespace se {
-	using VectorT = std::vector<std::string_view>;
+	using VectorT = std::vector<std::string>;
 
 	/*
 		Representation of threat that determines if the file is suspicious
@@ -13,23 +13,23 @@ namespace se {
 	*/
 
 	struct Threat {
-		std::string_view name_;
-		VectorT extensions_;
-		VectorT strings_;
+		std::string name;
+		VectorT extensions;
+		VectorT strings;
 		
 		// Add given extension to the list of potentially suspicious files
-		void addExtension(std::string_view extension) {
-			extensions_.push_back(extension);
+		void addExtension(const std::string& extension) {
+			extensions.push_back(extension);
 		}
 
 		// Add given string to the list of suspicious strings
-		void addString(std::string_view string) {
-			strings_.push_back(string);
+		void addString(const std::string& string) {
+			strings.push_back(string);
 		}
 
 		// Set the name of this threat
-		void setName(std::string_view name) {
-			name_ = name;
+		void setName(const std::string& new_name) {
+			name = new_name;
 		}
 	};
 }

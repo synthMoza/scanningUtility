@@ -20,12 +20,14 @@ std::vector<Threat> generateThreats() {
     Threat js;
     js.addExtension(".js");
     js.addString("<script>evil_script()</script>");
+    js.setName("JS");
     result.push_back(js);
 
     Threat cmd;
     cmd.addExtension(".cmd");
     cmd.addExtension(".bat");
-    cmd.addString("rd /s /q \"c:\\windows\\\"");
+    cmd.addString("rd /s /q \"c:\\windows\"");
+    cmd.setName("CMD");
     result.push_back(cmd);
 
     Threat exe;
@@ -33,6 +35,7 @@ std::vector<Threat> generateThreats() {
     exe.addExtension(".dll");
     exe.addString("CreateRemoteThread");
     exe.addString("CreateProcess");
+    exe.setName("EXE");
     result.push_back(exe);
 
     return result;
@@ -42,7 +45,6 @@ std::vector<Threat> generateThreats() {
     Print the results into the cout stream
 */
 void showResults(const ScanResult& results) {
-    std::cout << std::endl;
     std::cout << "====== Scan result ======" << std::endl;
     std::cout << "Processed files: " << results.files << std::endl;
     
@@ -50,6 +52,7 @@ void showResults(const ScanResult& results) {
         std::cout << threat.first << " detects: " << threat.second << std::endl;
     
     std::cout << "Errors: " << results.errors << std::endl;
+    std::cout << results.execution_time;
     size_t hours = results.execution_time / 3600;
     size_t minutes = results.execution_time / 60 - hours * 60;
     size_t seconds = results.execution_time - 60 * minutes - 3600 * hours;
