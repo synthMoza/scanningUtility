@@ -3,6 +3,7 @@
 #include <string>
 
 #include "scanner.hpp"
+#include "timer.hpp"
 
 using namespace se;
 
@@ -34,61 +35,69 @@ static std::vector<size_t> prefixFunction(const std::string& str) {
 	Uses Knuth–Morris–Pratt algorithm
 */
 static bool containsSubstrKMP(const std::string& str, const std::string& substr) {
-	std::string tmp = str + '\0' + substr;
+	std::string tmp = substr + '\0' + str;
 	auto pi = prefixFunction(tmp);
 	
+	size_t j = 0;
 	auto str_length = str.length();
-	auto end = str_length + 1 + substr.length();
-	for (size_t i = str_length + 1; i < end; ++i) {
-		if (pi[i] == str_length)
+	auto substr_length = substr.length();
+	for (size_t i = 0; i < str_length; ++i) {
+		while ((j > 0) && (str[i] != substr[j]))
+			j = pi[j - 1];
+		if (str[i] == substr[j])
+			++j;
+		if (j == substr_length)
 			return true;
 	}
 
 	return false;
 }
 
-/*
-	Read the file into the vector of strings
-*/
-static std::vector<std::string> readFile(std::ifstream& file) {
-	// Read the whole file
-	std::vector<std::string> data;
-	std::string tmp;
-
-	data.reserve(START_SIZE);
-	while (std::getline(file, tmp))
-		data.push_back(tmp);
-
-	return data;
+void Scanner::scanFile(const fs::path& path, ScanResult& result) const {
+	auto end = threats_.size();
+	for (size_t i = 0; i < end; ++i)
+		for (auto& ext : threats_[i].extensions)
+			if (path.extension() == ext) {
+				// Found the extension
+				switch (findThreat(path, threats_[i])) {
+				case 1:
+					result.threats[i].second++;
+					break;
+				case -1:
+					result.errors++;
+					break;
+				default:
+					continue;
+				}
+			}
 }
 
-/*
-	Find the suspicious string inside the given file, return 1 if
-	the file contains it, 0 if not, -1 - error occured
-*/
-int Scanner::findThreat(const fs::path& path, const Threat& threat) {
+int Scanner::findThreat(const fs::path& path, const Threat& threat) const {
 	std::ifstream file;
 	
 	// Check if we can open this file
 	try {
 		file.open(path);
-		auto data = readFile(file);
-		// Check strings for suspicious content using Knuth–Morris–Pratt algorithm
-		for (auto& str : data) {
+		std::string str;
+		while (std::getline(file, str)) {
 			for (auto& threat_str : threat.strings) {
 				if (containsSubstrKMP(str, threat_str))
 					return 1;
 			}
 		}
+
+		file.close();
 	}
 	catch (const std::exception& e) {
+		file.close();
 		return -1;
 	}
+
 
 	return 0;
 }
 
-ScanResult Scanner::scan() {
+ScanResult Scanner::scan() const {
 	ScanResult result{};
 	// Generate threat results
 	result.threats.reserve(threats_.size());
@@ -97,7 +106,8 @@ ScanResult Scanner::scan() {
 		result.threats.push_back(pair);
 	}
 
-	auto time_begin = chr::high_resolution_clock::now();
+	// Measure execution time
+	Timer::start();
 
 	// Iterate through directory
 	for (const auto& entry : fs::directory_iterator(path_)) {
@@ -107,28 +117,11 @@ ScanResult Scanner::scan() {
 		result.files++;
 
 		// If the file is suspicious, examine it
-		auto end = threats_.size();
-		for (size_t i = 0; i < end; ++i) {
-			for (auto& ext : threats_[i].extensions) {
-				if (entry.path().extension() == ext) {
-					// Found the extension
-					switch (findThreat(entry.path(), threats_[i])) {
-						case 1:
-							result.threats[i].second++;
-							break;
-						case -1:
-							result.errors++;
-							break;
-						default:
-							continue;
-					}
-				}
-			}
-		}
+		scanFile(entry.path(), result);
 	}
 
-	auto time_end = chr::high_resolution_clock::now();
-	result.execution_time = chr::duration_cast<chr::seconds>(time_end - time_begin).count();
+	Timer::stop();
+	result.execution_time = Timer::get();
 
 	return result;
 }

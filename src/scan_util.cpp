@@ -1,6 +1,10 @@
 ﻿#include <iostream>
 #include <vector>
 
+#ifdef DEBUG
+#include <gtest/gtest.h>
+#endif
+
 #include "scanner.hpp"
 
 using namespace se;
@@ -52,7 +56,7 @@ void showResults(const ScanResult& results) {
         std::cout << threat.first << " detects: " << threat.second << std::endl;
     
     std::cout << "Errors: " << results.errors << std::endl;
-    std::cout << results.execution_time;
+
     size_t hours = results.execution_time / 3600;
     size_t minutes = results.execution_time / 60 - hours * 60;
     size_t seconds = results.execution_time - 60 * minutes - 3600 * hours;
@@ -66,6 +70,11 @@ void showResults(const ScanResult& results) {
 }
 
 int main(int argc, char* argv[]) {
+#ifdef DEBUG
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+#endif
+
     if (argc != 2) {
         std::cerr << "Usage: ./scan_util <directory>" << std::endl;
         return EXIT_FAILURE;

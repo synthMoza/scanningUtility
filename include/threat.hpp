@@ -12,7 +12,7 @@ namespace se {
 		suspicious strings
 	*/
 
-	struct Threat {
+	struct Threat final {
 		std::string name;
 		VectorT extensions;
 		VectorT strings;

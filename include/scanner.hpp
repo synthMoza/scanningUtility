@@ -10,6 +10,7 @@
 namespace se {
 	namespace fs = std::filesystem;
 	namespace chr = std::chrono;
+
 	using std::size_t;
 	using PairT = std::pair<std::string, size_t>;
 
@@ -18,7 +19,7 @@ namespace se {
 		threats. Contains the vector of found threats' number, number of
 		errors and execution time (in seconds)
 	*/
-	struct ScanResult {
+	struct ScanResult final {
 		std::vector<PairT> threats;
 		size_t errors;
 		size_t execution_time;
@@ -27,15 +28,21 @@ namespace se {
 
 	/*
 		Class for scanning giving directory for suspicious files. 
-		List of simplifications:
-			1) There are no nested directories
-			2) There is only one type of suspicios content in each file
 	*/
-	class Scanner {
+	class Scanner final {
 		fs::path path_;
 		std::vector<Threat> threats_;
+		
+		/*
+			Find the suspicious string inside the given file, return 1 if
+			the file contains it, 0 if not, -1 - error occured
+		*/
+		int findThreat(const fs::path& path, const Threat& threat) const;
 
-		int findThreat(const fs::path& path, const Threat& threat);
+		/*
+			Scan the file for all presented threats
+		*/
+		void scanFile(const fs::path& path, ScanResult& result) const;
 	public:
 		// Two types of constructors in case the given vector is rvalue
 		Scanner(const char* dir_name, const std::vector<Threat>& threats) : 
@@ -59,8 +66,6 @@ namespace se {
 		}
 		// Scan the directory for given threats
 		// @return Number of found threats, errors and execution time
-		ScanResult scan();
-
-		~Scanner() {}
+		ScanResult scan() const;
 	};
 }
