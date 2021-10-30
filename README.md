@@ -32,3 +32,20 @@ Execution time: 00:00:04
 There are some simplifications for this problem:
 * No nested directories
 * Only one type of suspicious content in each file
+
+# How to Build and Run
+Create a directory ```build``` in the repository folder, then open the terminal in the repository and type:
+```
+cd build
+cmake ..
+cd ..
+cmake --build build
+```
+It will create the *Makefile/VS Project/etc* in ```build``` directory, and compile the project. To launch the program, use
+```
+./scan_util <directory>
+```
+# Implementation details
+Class ```Threat``` generalizes suspicion, as a pair of extensions and corresponding strings. The main class ```Scanner``` takes the directory and the vector of threats to scan, and then it runs with the method ```scan()```. While traversing all files inside the folder, scanner checks each one's extension, comparing with the "threatening" ones, and if the comparance ends in success, checks all strings of this file, looking for suspicious ones. If it finds one, it increments the corresponding counter in the ```ScanResult``` struct and continues iterating through the directory. ```Std::filesystem``` is used for manipulating with directories and files. ```Std::chrono``` is used for measuring execution time. CMake is used for building the project. Knuth–Morris–Pratt algorithm is used for finding the substring in the string.
+# Credits
+I'd like to say thanks to the person who wrote this program, myself.
