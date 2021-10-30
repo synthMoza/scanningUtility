@@ -13,7 +13,7 @@ using PairT = std::pair<std::string, size_t>;
 std::vector<Threat> generateThreats();
 
 TEST(SCAN_TEST, E2E) {
-	size_t test_number = 1;
+	size_t test_number = 3;
 	ScanResult ans;
 
     auto threats = generateThreats();
@@ -25,6 +25,8 @@ TEST(SCAN_TEST, E2E) {
 	}
 
 	for (size_t i = 1; i <= test_number; ++i) {
+        std::cout << "Executing test number " << i << "..." << std::endl;
+
         // Read directory and answer
 		std::string dir_path("../tests/e2e/dir_" + std::to_string(i));
 		std::string ans_path("../tests/e2e/dir_" + std::to_string(i) + "_ans.txt");
@@ -44,5 +46,7 @@ TEST(SCAN_TEST, E2E) {
         for (size_t i = 0; i < end; ++i)
             EXPECT_EQ(result.threats[i].second, ans.threats[i].second);
         EXPECT_EQ(result.errors, ans.errors);
+
+        std::cout << "Done" << std::endl;
 	}
 }
