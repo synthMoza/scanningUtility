@@ -2,6 +2,10 @@
 #include <vector>
 #include <string>
 
+#ifdef PARALLEL
+#include <thread>
+#endif
+
 #include "scanner.hpp"
 #include "timer.hpp"
 
@@ -98,6 +102,9 @@ int Scanner::findThreat(const fs::path& path, const Threat& threat) const {
 }
 
 ScanResult Scanner::scan() const {
+	// Measure execution time
+	Timer::start();
+	
 	ScanResult result{};
 	// Generate threat results
 	result.threats.reserve(threats_.size());
@@ -106,9 +113,43 @@ ScanResult Scanner::scan() const {
 		result.threats.push_back(pair);
 	}
 
-	// Measure execution time
-	Timer::start();
+#ifdef PARALLEL
+	auto num_cpus = std::thread::hardware_concurrency();
+	// Files for each thread
+	VectorThreadsT threads_data(num_cpus);
+	// Iterate through directory, build thread data
+	size_t current_thread = 0;
+	for (const auto& entry : fs::directory_iterator(path_)) {
+		if (entry.is_directory())
+			continue;
+		result.files++;
 
+		threads_data[current_thread++].push_back(entry.path());
+		if (current_thread == num_cpus)
+			current_thread = 0;
+	}
+	// Don't used extra cores
+	if (result.files < num_cpus)
+		num_cpus = result.files;
+
+	// Launch all threads
+	std::vector<std::thread> threads(num_cpus);
+	std::vector<ScanResult> threads_results(num_cpus, result);
+	for (size_t i = 0; i < num_cpus; ++i) {
+		threads[i] = std::thread([this, i, &threads_data, &threads_results] {
+			for (auto& path : threads_data[i])
+				scanFile(path, threads_results[i]);
+			});
+	}
+
+	// Wait for all threads and collect their results
+	for (size_t i = 0; i < num_cpus; ++i) {
+		threads[i].join();
+		auto end = threats_.size();
+		for (size_t j = 0; j < end; ++j)
+			result.threats[j].second += threads_results[i].threats[j].second;
+	}
+#else
 	// Iterate through directory
 	for (const auto& entry : fs::directory_iterator(path_)) {
 		if (entry.is_directory())
@@ -119,7 +160,7 @@ ScanResult Scanner::scan() const {
 		// If the file is suspicious, examine it
 		scanFile(entry.path(), result);
 	}
-
+#endif
 	Timer::stop();
 	result.execution_time = Timer::get();
 

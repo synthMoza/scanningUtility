@@ -14,6 +14,9 @@ namespace se {
 	using std::size_t;
 	using PairT = std::pair<std::string, size_t>;
 
+	using VectorThreadT = std::vector<fs::path>;
+	using VectorThreadsT = std::vector<VectorThreadT>;
+
 	/*
 		Represents the result of scanning the directory for the given
 		threats. Contains the vector of found threats' number, number of

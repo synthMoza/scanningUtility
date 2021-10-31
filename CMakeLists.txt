@@ -28,12 +28,23 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # Configure compilation
+# Main executable
 include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIR})
 add_executable(${PROJECT_NAME} ${SRC_FILES} ${HEADERS})
 
-add_executable(${PROJECT_NAME}_tests ${SRC_FILES} ${HEADERS} ${TESTS})
-target_compile_definitions(${PROJECT_NAME}_tests PRIVATE DEBUG)
+# Target for using the application with threads
+add_executable(${PROJECT_NAME}_parallel ${SRC_FILES} ${HEADERS})
+target_compile_definitions(${PROJECT_NAME}_parallel PRIVATE PARALLEL)
 
+# Target for testing single-core version using gtests
+add_executable(${PROJECT_NAME}_tests ${SRC_FILES} ${HEADERS} ${TESTS})
+target_compile_definitions(${PROJECT_NAME}_tests PRIVATE TEST)
+
+# Target for testing single-core version using gtests
+add_executable(${PROJECT_NAME}_tests_parallel ${SRC_FILES} ${HEADERS} ${TESTS})
+target_compile_definitions(${PROJECT_NAME}_tests_parallel PRIVATE TEST PARALLEL)
+
+# Configure gtests
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME}_tests)
 
@@ -41,3 +52,4 @@ set(TEST_DIR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/${TEST_CASES_DIR})
 configure_file(${TESTS} ${TESTS} @ONLY)
 
 target_link_libraries(${PROJECT_NAME}_tests gtest_main)
+target_link_libraries(${PROJECT_NAME}_tests_parallel gtest_main)

@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <vector>
 
-#ifdef DEBUG
+#ifdef TEST
 #include <gtest/gtest.h>
 #endif
 
@@ -65,12 +65,11 @@ void showResults(const ScanResult& results) {
     std::cout << std::setfill('0') << std::setw(2) << hours;
     std::cout << ":" << std::setfill('0') << std::setw(2) << minutes;
     std::cout << ":" << std::setfill('0') << std::setw(2) << seconds << std::endl;
-    
     std::cout << "=========================" << std::endl;
 }
 
 int main(int argc, char* argv[]) {
-#ifdef DEBUG
+#ifdef TEST
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 #endif
