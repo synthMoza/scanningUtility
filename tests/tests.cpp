@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 
 #include "scanner.hpp"
+#include "substr.hpp"
 
 using namespace se;
 
@@ -49,4 +50,56 @@ TEST(SCAN_TEST, E2E) {
 
         std::cout << "Done" << std::endl;
 	}
+}
+
+TEST(PREFIX_TEST, UNIT_TEST_1) {
+    std::string str = "abcabcdabc";
+    std::vector<size_t> ans = {0, 0, 0, 1, 2, 3, 0, 1, 2, 3};
+
+    auto res = prefixFunction(str);
+    EXPECT_EQ(res, ans);
+}
+
+TEST(PREFIX_TEST, UNIT_TEST_2) {
+    std::string str = "abcdefghijklmnopqrstuvwxyz";
+    std::vector<size_t> ans(str.size());
+
+    auto res = prefixFunction(str);
+    EXPECT_EQ(res, ans);
+}
+
+TEST(PREFIX_TEST, UNIT_TEST_3) {
+    std::string str = "";
+    std::vector<size_t> ans;
+
+    auto res = prefixFunction(str);
+    EXPECT_EQ(res, ans);
+}
+
+TEST(SUBSTR_TEST, UNIT_TEST_1) {
+    std::string str = "gythfisdsdbjkaspersky123dnvber3432";
+    std::string substr = "kaspersky";
+
+    EXPECT_TRUE(containsSubstrKMP(str, substr));
+}
+
+TEST(SUBSTR_TEST, UNIT_TEST_2) {
+    std::string str = "9rjp;knewsfv2039ASRXGC;BM, V42WESFDVCXMB7C32980QWRIPASFKF DASFJLjdfhsjhfjsf";
+    std::string substr = "needle";
+
+    EXPECT_FALSE(containsSubstrKMP(str, substr));
+}
+
+TEST(SUBSTR_TEST, UNIT_TEST_3) {
+    std::string str = "";
+    std::string substr = "needle";
+
+    EXPECT_FALSE(containsSubstrKMP(str, substr));
+}
+
+TEST(SUBSTR_TEST, UNIT_TEST_4) {
+    std::string str = "1234324234rwf";
+    std::string substr = "";
+
+    EXPECT_TRUE(containsSubstrKMP(str, substr));
 }

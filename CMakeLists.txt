@@ -9,8 +9,8 @@ set(SRC_DIR src)
 set(TEST_DIR tests)
 set(TEST_CASES_DIR ${TEST_DIR}/e2e)
 
-set(HEADERS ${INCLUDE_DIR}/scanner.hpp ${INCLUDE_DIR}/threat.hpp ${INCLUDE_DIR}/timer.hpp)
-set(SRC_FILES ${SRC_DIR}/scan_util.cpp ${SRC_DIR}/scanner.cpp ${SRC_DIR}/timer.cpp)
+set(HEADERS ${INCLUDE_DIR}/scanner.hpp ${INCLUDE_DIR}/threat.hpp ${INCLUDE_DIR}/timer.hpp ${INCLUDE_DIR}/substr.hpp)
+set(SRC_FILES ${SRC_DIR}/scan_util.cpp ${SRC_DIR}/scanner.cpp ${SRC_DIR}/timer.cpp ${SRC_DIR}/substr.cpp)
 set(TESTS ${TEST_DIR}/tests.cpp)
 
 # Google test definition

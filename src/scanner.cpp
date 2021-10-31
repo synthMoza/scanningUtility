@@ -6,56 +6,13 @@
 #include <thread>
 #endif
 
+#include "substr.hpp"
 #include "scanner.hpp"
 #include "timer.hpp"
 
 using namespace se;
 
 const size_t START_SIZE = 512; // start vector size
-
-/*
-	Build prefix function for the given string, using
-	effective Knuth–Morris–Pratt algorithm
-*/
-static std::vector<size_t> prefixFunction(const std::string& str) {
-	auto length = str.length();
-	std::vector<size_t> pi(length);
-	
-	for (size_t i = 1; i < length; ++i) {
-		size_t j = pi[i - 1];
-		while (j > 0 && str[i] != str[j])
-			j = pi[j - 1];
-		if (str[i] == str[j])
-			++j;
-		pi[i] = j;
-	}
-
-	return pi;
-}
-
-
-/*
-	Returns true if the string contains the substring, false otherwise
-	Uses Knuth–Morris–Pratt algorithm
-*/
-static bool containsSubstrKMP(const std::string& str, const std::string& substr) {
-	std::string tmp = substr + '\0' + str;
-	auto pi = prefixFunction(tmp);
-	
-	size_t j = 0;
-	auto str_length = str.length();
-	auto substr_length = substr.length();
-	for (size_t i = 0; i < str_length; ++i) {
-		while ((j > 0) && (str[i] != substr[j]))
-			j = pi[j - 1];
-		if (str[i] == substr[j])
-			++j;
-		if (j == substr_length)
-			return true;
-	}
-
-	return false;
-}
 
 void Scanner::scanFile(const fs::path& path, ScanResult& result) const {
 	auto end = threats_.size();
