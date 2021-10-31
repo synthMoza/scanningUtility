@@ -1,5 +1,5 @@
 # Scanning Utility
-Task for joining *Kaspersky Labs* through *SafeBoard* program Designed for searching suspicious strings in certain files inside the directory.
+Task for joining *Kaspersky Labs* through *SafeBoard* program. Designed for searching suspicious strings in certain files inside the directory.
 # Problem
 It is required to implement a C ++ command-line utility that scans files in a directory in order to find suspicious files in it.
 Within the framework of the task, 3 types of “suspicious” content in the file were identified:
