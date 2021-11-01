@@ -34,6 +34,8 @@ There are some simplifications for this problem:
 * Only one type of suspicious content in each file
 
 # How to Build and Run
+This program is written for Windows (after a series of test, it turns out that Linux and Windows might vary in test results, especially for .exe files).
+
 Create a directory ```build``` in the repository folder, then open the terminal in the repository and type:
 ```
 cd build
@@ -41,7 +43,7 @@ cmake ..
 cd ..
 cmake --build build
 ```
-It will create the *Makefile/VS Project/etc* in ```build``` directory, and compile the project. To launch the program, use
+It will compile the project. To launch the program, use
 ```
 ./scan_util <directory>
 ```
