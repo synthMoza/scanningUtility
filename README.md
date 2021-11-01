@@ -4,7 +4,7 @@ Task for joining *Kaspersky Labs* through *SafeBoard* program. Designed for sear
 It is required to implement a C ++ command-line utility that scans files in a directory in order to find suspicious files in it.
 Within the framework of the task, 3 types of “suspicious” content in the file were identified:
 
-* **JS** suspicious: a ```.js``` file containing the line: ```<script> evil_script () </script>```
+* **JS** suspicious: a ```JS``` file containing the line: ```<script>evil_script()</script>```
 * **CMD** suspicious: file with ```CMD / BAT``` extension containing the line: ```rd / s / q "c: \ windows"```
 * **EXE** suspicious: a file with an ```EXE / DLL``` extension containing the lines: ```CreateRemoteThread, CreateProcess```
 
@@ -15,17 +15,17 @@ As the result of this utility work, the user should be presented with a scan rep
 * the number of file analysis errors (for example, there are not enough rights to read the file);
 * the runtime of the utility.
 
-The example of this utility work from the command line:
+The example of this utility work from the command line (not the real output):
 ```
 ./scan_util C:\Windows\System32
 
 ====== Scan result ======
 Processed files: 4672
-JS detects: 0
-CMD detects: 0
-EXE detects: 35
-Errors: 0
-Execution time: 00:00:04
+JS detects: 23
+CMD detects: 4
+EXE detects: 6
+Errors: 28
+Execution time: 00:00:24
 =========================
 ```
 
