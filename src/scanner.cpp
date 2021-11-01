@@ -36,7 +36,7 @@ void Scanner::scanFile(const fs::path& path, ScanResult& result) const {
 int Scanner::findThreat(const fs::path& path, const Threat& threat) const {
 	std::ifstream file;
 	
-	// Check if we can open this file
+	// Check if we can open this file and start scanning
 	try {
 		file.open(path);
 		std::string str;
@@ -50,10 +50,11 @@ int Scanner::findThreat(const fs::path& path, const Threat& threat) const {
 		file.close();
 	}
 	catch (const std::exception& e) {
+		std::cout << "Error while scanning " << path << std::endl;
+		std::cout << e.what() << std::endl;
 		file.close();
 		return -1;
 	}
-
 
 	return 0;
 }

@@ -5,10 +5,6 @@
 
 using namespace se;
 
-/*
-	Build prefix function for the given string, using
-	effective Knuth–Morris–Pratt algorithm
-*/
 std::vector<size_t> se::prefixFunction(const std::string& str) {
 	auto length = str.length();
 	std::vector<size_t> pi(length);
@@ -25,11 +21,6 @@ std::vector<size_t> se::prefixFunction(const std::string& str) {
 	return pi;
 }
 
-
-/*
-	Returns true if the string contains the substring, false otherwise
-	Uses Knuth–Morris–Pratt algorithm
-*/
 bool se::containsSubstrKMP(const std::string& str, const std::string& substr) {
 	std::string tmp = substr + '\0' + str;
 	auto pi = prefixFunction(tmp);

@@ -9,15 +9,13 @@
 
 using namespace se;
 
-/*
-    Generate necessary threats for the scanner. For the given
-    problem, the list is as follows:
-        (*) .js - <script>evil_script()</script>
-        (*) .CMD / .BAT - rd /s /q "c:\windows"
-        (*) .EXE / .DLL - CreateRemoteThread, CreateProcess
-
-    @return Vector of generated threats
-*/
+    
+/// @brief Generate necessary threats for the scanner. For the given
+/// problem, the list is as follows:
+/// 1) .js - <script>evil_script() </script>
+/// 2) .CMD / .BAT - rd / s / q "c:\windows"
+/// 3) .EXE / .DLL - CreateRemoteThread, CreateProcess
+/// @return Vector of generated threats
 std::vector<Threat> generateThreats() {
     std::vector<Threat> result;
     
@@ -45,9 +43,8 @@ std::vector<Threat> generateThreats() {
     return result;
 }
 
-/*
-    Print the results into the cout stream
-*/
+/// @brief Print the results into the cout stream
+/// @param results Scanning result to print
 void showResults(const ScanResult& results) {
     std::cout << "====== Scan result ======" << std::endl;
     std::cout << "Processed files: " << results.files << std::endl;

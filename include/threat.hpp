@@ -6,12 +6,10 @@
 namespace se {
 	using VectorT = std::vector<std::string>;
 
-	/*
-		Representation of threat that determines if the file is suspicious
-		The threat contains the extensions of the file and the corresponding 
-		suspicious strings
-	*/
-
+	/// @brief	Representation of threat that determines if the file is suspicious.
+	///	@param name Name of this threat
+	/// @param extensions File extensions that might include this threat
+	/// @param strings Suspicious strings that determines this threat
 	struct Threat final {
 		std::string name;
 		VectorT extensions;
